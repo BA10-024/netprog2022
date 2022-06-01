@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
     struct hostent *h;
     int sockfd;
     unsigned short port = 8784;
-    char input[20];
+    char input[100];
     strcpy(input,argv[1]);
     if ((h=gethostbyname(input)) == NULL) {
         printf("Unknown host\n");
@@ -20,10 +20,22 @@ int main(int argc, char *argv[]){
     }
     memset(&saddr, 0, sizeof(saddr));
     saddr.sin_family = AF_INET;
-    memcpy((char *) &saddr.sin_addr.s_addr, h->h_addr_list[0], h->h_length)saddr.sin_port = htons(port);
+    memcpy((char *) &saddr.sin_addr.s_addr, h->h_addr_list[0], h->h_length);
+    saddr.sin_port = htons(port);
     if (connect(sockfd, (struct sockaddr *) &saddr, sizeof(saddr)) < 0) {
-        printf("Cannot connect\n");
+        printf("Cannot connect \n");
     } 
-    printf("Successfully connected to server.\n ");
+    else{
+        printf("Successfully connected to server.\n ");
+        char buf[1024];
+        char data[1024];
+        while(1){
+            printf("Enter the messages: ");
+            scanf("%s",buf);
+            send(sockfd,buf,sizeof(buf),0);
+            recv(sockfd,data,sizeof(data),0);
+            printf("Messages from server: %s \n",data);
+        }
+    }
     return 0;
 }
