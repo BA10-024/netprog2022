@@ -26,16 +26,15 @@ int main() {
     if ((clientfd=accept(sockfd, (struct sockaddr *) &caddr, &clen)) < 0) {
         printf("Error connection.");
     }
-    else{  
-        printf("Successfully connected.\n");
-        char buf[1024];
-        char data[1024];
-        while(1){
-            recv(clientfd,buf,sizeof(buf),0);
-            printf("Messages from client: %s",buf);
-            scanf("%s",buf);
-            send(clientfd,data,sizeof(data),0);
-        }
+    printf("Successfully connected.\n");
+    char buf[1024];
+    char data[1024];
+    while(1){
+        recv(clientfd,buf,sizeof(buf),0);
+        printf("Messages from client: %s\n",buf);
+        printf("Mesages to client: ");
+        scanf("%s",data);
+        send(clientfd,data,sizeof(data),0);
     }
     return 0;
  }
