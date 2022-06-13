@@ -46,24 +46,24 @@ int main(){
     char data[MAX];
     while(1){
     	if (recv(sockfd, data, sizeof(data),0)>0){
-    		printf("Message from server: %s \n",data);
+    	    printf("Message from server: %s \n",data);
     	}
     	if (poll(&fds, 1, 0) > 0) {
             if (fds.revents & POLLIN) {
-        		fgets(buf,MAX,stdin);
-        		if (strcmp(buf,"/quit\n")==0){
-            		printf("Disconnected \n");
+        	fgets(buf,MAX,stdin);
+        	if (strcmp(buf,"/quit\n")==0){
+            	    printf("Disconnected \n");
+            	    break;
+        	}
+        	for(int i = 0; i < MAX; i++) { 
+            	    if (buf[i] == '\n') {
+            		buf[i] = '\0';
             		break;
-        		}
-        		for(int i = 0; i < MAX; i++) { 
-            		if (buf[i] == '\n') {
-            			buf[i] = '\0';
-            			break;
-            		}
-    			} 
-        		send(sockfd,buf,sizeof(buf),0);
-			}
-		}	    	
+            	    }
+    		} 
+        	send(sockfd,buf,sizeof(buf),0);
+	    }
+	}	    	
     }   
     close(sockfd);
     return 0;

@@ -45,31 +45,31 @@ int main() {
     while(connected){
     	clientfd=accept(sockfd, (struct sockaddr *) &caddr, &clen);
     	if (clientfd > 0){
-    		printf("Successfully connected.\n");
-    		int clientfl = fcntl(clientfd, F_GETFL, 0);
-    		clientfl |= O_NONBLOCK;
-    		fcntl(clientfd, F_SETFL, clientfl);
-    		while(1){
-    			if (recv(clientfd, buf, sizeof(buf),0)>0){
-    				printf("Messages from client: %s \n",buf);
+    	    printf("Successfully connected.\n");
+    	    int clientfl = fcntl(clientfd, F_GETFL, 0);
+    	    clientfl |= O_NONBLOCK;
+    	    fcntl(clientfd, F_SETFL, clientfl);
+    	    while(1){
+    	        if (recv(clientfd, buf, sizeof(buf),0)>0){
+    		    printf("Messages from client: %s \n",buf);
+        	}
+        	if (poll(&fds, 1, 0) > 0) {
+            	    if (fds.revents & POLLIN) {
+        	        fgets(data,MAX,stdin);
+        		if (strcmp(data,"/dc\n")==0){
+            		    printf("Disconnected \n");
+            		    break;
         		}
-        		if (poll(&fds, 1, 0) > 0) {
-            		if (fds.revents & POLLIN) {
-        				fgets(data,MAX,stdin);
-        				if (strcmp(data,"/dc\n")==0){
-            				printf("Disconnected \n");
-            				break;
-        				}
-        				for(int i = 0; i < MAX; i++) { 
-            				if (data[i] == '\n') {
-            					data[i] = '\0';
-            					break;
-            				}
-    					} 
-        				send(clientfd,data,sizeof(data),0);
-					}
-				}	    	
-    		}
+        		for(int i = 0; i < MAX; i++) { 
+            		    if (data[i] == '\n') {
+            			data[i] = '\0';
+            			break;
+            		    }
+    			} 
+        		send(clientfd,data,sizeof(data),0);
+		    }
+	        }	    	
+    	    }
     	}	
     }
     close(sockfd);
