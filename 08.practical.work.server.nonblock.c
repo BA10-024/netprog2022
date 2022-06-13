@@ -52,7 +52,6 @@ int main() {
     		while(1){
     			if (recv(clientfd, buf, sizeof(buf),0)>0){
     				printf("Messages from client: %s \n",buf);
-
         		}
         		if (poll(&fds, 1, 0) > 0) {
             		if (fds.revents & POLLIN) {
@@ -76,5 +75,4 @@ int main() {
     close(sockfd);
 	return 0;
 }
-        	
-        
+   
